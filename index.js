@@ -29,8 +29,10 @@ async function run() {
 
     const productCollection = client.db('productDB').collection('product')
     const cartCollection = client.db('productDB').collection('myCart')
+    const blogCollection = client.db('productDB').collection('blogs')
+    const serviceCollection = client.db('productDB').collection('services')
 
-    // create
+    // create product collection
     app.post('/product', async(req,res)=>{
       const user = req.body
       const result = await productCollection.insertOne(user)
@@ -100,6 +102,26 @@ async function run() {
       const result = await cartCollection.deleteOne(query)
       res.send(result)
     })
+
+    // blog collection
+    app.get('/blogs', async(req,res)=>{
+      const result= await blogCollection.find().toArray()
+      res.send(result)
+    })
+
+    // services collection
+    app.get('/services', async(req,res)=>{
+      const result= await serviceCollection.find().toArray()
+      res.send(result)
+    })
+
+    app.get('/services/:id', async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await serviceCollection.findOne(query)
+      res.send(result)
+    })
+
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
